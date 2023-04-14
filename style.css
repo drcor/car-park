@@ -45,7 +45,7 @@ body *{
     align-items: center;
     flex-direction: column;
     padding:30px 35px;
-    background: rgb(56, 61, 116);
+    background:  rgb(73, 78, 134);
     border-radius: 20px;
     box-shadow: 0px 10px 40px rgb(11, 10, 10);
 }
@@ -71,7 +71,7 @@ body *{
     border-radius: 10px;
     padding: 15px;
     background: rgb(235, 235, 235);
-    color: white;
+    color: rgb(73, 78, 134);
     font-size: 12pt;
     box-shadow: 0px 10px 40px rgb(11, 10, 10);
     outline: none;
@@ -96,7 +96,7 @@ body *{
     color: black;
     background: white;
     cursor: pinter;
-    box-shadow: 0px 10px 40px -12px rgb(1, 131, 245);
+    box-shadow: 0px 10px 40px -12px rgb(183, 206, 226);
 }
 
 @media only screen and (max-width: 950px){

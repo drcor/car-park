@@ -47,7 +47,10 @@
 		}
 		fclose($file);
 
-		return $logs;
+		$result = array_map('array_filter', $logs); // Remove empty subarrays
+		$result = array_filter($result);			// Remove empty elements
+
+		return $result;
 	}
 
 	function is_user($username, $credentials) {

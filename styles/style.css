@@ -85,6 +85,7 @@ a, a:hover, a:focus {
 
 #content {
     width: 100vw;
+    overflow-y: scroll;
 }
 
 #topbar {
@@ -94,6 +95,11 @@ a, a:hover, a:focus {
 .sensor {
     color: rgb(95, 95, 95);
     background-color: rgb(250, 159, 22);
+}
+
+.card img {
+    width: 10vh;
+    margin:auto;
 }
 
 @media (max-width: 900px) {

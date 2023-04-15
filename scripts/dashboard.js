@@ -17,10 +17,13 @@ function updateValues(name) {
 }
 
 var time = new Date(),
-	secondsRemaining = (60 - time.getSeconds()) * 1000;
+	secondsRemaining = (20 - time.getSeconds()) * 1000;
 
 setTimeout(function() {
-	setInterval(updateValues, 10000, 'temperatura');
-	setInterval(updateValues, 10000, 'humidade');
-	setInterval(updateValues, 10000, 'co2');
+	setInterval(updateValues, 20000, 'temperatura');
+	setInterval(updateValues, 20000, 'humidade');
+	setInterval(updateValues, 20000, 'co2');
+	setInterval(updateValues, 20000, 'cancelaEnt');
+	setInterval(updateValues, 20000, 'cancelaSai');
+	setInterval(updateValues, 20000, 'luzes');
 }, secondsRemaining);

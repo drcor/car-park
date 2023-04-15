@@ -7,7 +7,7 @@
 				$dirs[] = $file->getFilename();
 			}
 		}
-	
+
 		return $dirs;
 	}
 	
@@ -29,12 +29,25 @@
 		$credentials = array();
 
 		while (!feof($file)) {
-			$line  = fgets($file);
+			$line = trim(fgets($file));
 			$credentials[] = explode(':', $line);
 		}
 		fclose($file);
 
 		return $credentials;
+	}
+	
+	function parse_logs($file_name) {
+		$file = fopen($file_name, 'r');
+		$logs = array();
+
+		while (!feof($file)) {
+			$line = trim(fgets($file));
+			$logs[] = explode(';', $line);
+		}
+		fclose($file);
+
+		return $logs;
 	}
 
 	function is_user($username, $credentials) {
@@ -45,5 +58,17 @@
 		}
 
 		return false;
+	}
+
+	function get_user($username, $credentials) {
+		$user = array();
+		foreach ($credentials as $row) {
+			if ($username == $row[0]) {
+				$user = $row;
+				break;
+			}
+		}
+
+		return $user;
 	}
 ?>

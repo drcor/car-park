@@ -1,8 +1,3 @@
-document.getElementById('sidebarCollapse').addEventListener('click', function() {
-	let sidebar = document.getElementById('sidebar');
-	sidebar.classList.toggle('active');
-});
-
 function updateValues(name) {
 	fetch("/api/api.php?nome=" + name)
 		.then(response => response.json())

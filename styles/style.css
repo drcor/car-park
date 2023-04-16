@@ -1,11 +1,5 @@
-@font-face {
-	font-family: LiberationSans;
-	src: url(../fonts/LiberationSans-Regular.ttf);
-}
-
 body {
     margin: 0;
-	font-family: LiberationSans;
     background: #fafafa;
 }
 
@@ -41,10 +35,11 @@ a, a:hover, a:focus {
 #sidebar {
     min-width: 250px;
     max-width: 250px;
-    min-height: 100vh;
+    height: 100vh;
     background: #333435;
     color: #fff;
     transition: all 0.3s;
+    z-index: 999;
 }
 #sidebar.active {
     margin-left: -250px;
@@ -71,12 +66,16 @@ a, a:hover, a:focus {
 }
 #sidebar ul li a:hover {
     color: #333435;
-    background: #fff;
+    background: #fafafa;
 }
 
 #sidebar ul li.active > a, a[aria-expanded="true"] {
     color: #fff;
     background: #6d99cc;
+}
+#sidebar ul li a.active {
+    color: #333435;
+    background-color: #fafafa;
 }
 
 .dropdown-toggle {
@@ -90,26 +89,33 @@ a, a:hover, a:focus {
 
 #topbar {
     display: none;
+    height: 55px;
 }
 
 .sensor {
-    color: rgb(95, 95, 95);
+    color: rgb(43, 43, 43);
     background-color: rgb(250, 159, 22);
 }
 
 .card img {
-    width: 10vh;
+    height: 15vh;
     margin:auto;
 }
 
 @media (max-width: 900px) {
     #sidebar {
         margin-left: -250px;
+        position: fixed;
+        height: calc(100vh - 55px);
     }
     #sidebar.active {
         margin-left: 0;
     }
     #topbar {
         display: block;
+        position: relative;
+    }
+    .wrapper {
+        height: calc(100vh - 55px);
     }
 }

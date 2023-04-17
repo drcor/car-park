@@ -46,8 +46,8 @@
         <form  method="post" class="needs-validation">
             <!-- Espaco Username -->
             <div class="form-group was-validated">
-                <label class="form-label" for="email">Username</label>
-                <input class="form-control" type="username" name="username" required> <!-- required -> obrigatorio escrever-->
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" id="username" type="text" name="username" required> <!-- required -> obrigatorio escrever-->
                 <div class="invalid-feedback">
                     Escreva o seu endereço de email
                 </div>
@@ -55,7 +55,7 @@
             <!-- Espaco password -->
             <div class="form-group was-validated">
                 <label class="form-label" for="password">Password</label>
-                <input class="form-control" type="password" name="password" required> <!-- required -> obrigatorio escrever-->
+                <input class="form-control" id="password" type="password" name="password" required> <!-- required -> obrigatorio escrever-->
                 <div class="invalid-feedback">
                     Escreva a sua password
                 </div>

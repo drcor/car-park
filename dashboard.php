@@ -1,25 +1,26 @@
 <?php
-require_once('utils.php');
+	require_once('utils.php');
 
-session_start();
+	session_start();
 
-$credentials = analyze_credentials('../credentials.txt');
-
-if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credentials)) {
-	header("Location: /");
-}
-
-// Get user information from list of users
-$user = get_user($_SESSION['username'], $credentials);
+	// Obtem credencias do ficheiro
+	$credentials = analyze_credentials('../credentials.txt');
 
 
-// get list of existing API files
-$files = get_dirs('api/files/');
+	// Obtem credencias do ficheiro
+	if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credentials)) {
+		header("Location: /");
+	}
+
+	// Obter crecenciais referentes ao utilizador logado
+	$user = get_user($_SESSION['username'], $credentials);
+
+	// Obter lista de sensores/atuadores
+	$files = get_dirs('api/files/');
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,8 +32,8 @@ $files = get_dirs('api/files/');
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 	<link rel="stylesheet" href="/styles/style.css">
 </head>
-
 <body>
+	<!-- Topbar -->
 	<nav id="topbar" class="navbar navbar-expand-lg bg-body-tertiary">
 		<div class="container-fluid">
 			<a id="sidebarCollapse" class="btn btn-secondary">
@@ -41,7 +42,7 @@ $files = get_dirs('api/files/');
 			<h4 class="text-white">Dashboard</h4>
 		</div>
 	</nav>
-	<div class="wrapper"><!--- Topbar --->
+	<div class="wrapper">
 		<!-- Sidebar -->
 		<nav id="sidebar" class="d-flex flex-column">
 			<div class="sidebar-header">
@@ -62,10 +63,10 @@ $files = get_dirs('api/files/');
 		<!-- Page Content -->
 		<div id="content">
 			<div class="container pt-2">
-				<h2></h2>
 				<div class="row">
 					<?php
 					foreach ($files as $file) {
+						// Obtem dados referentes a cada sensor/atuador
 						$nome = file_get_contents('api/files/' . $file . '/nome.txt');
 						$valor = file_get_contents('api/files/' . $file . '/valor.txt');
 						$hora = file_get_contents('api/files/' . $file . '/hora.txt');
@@ -110,6 +111,7 @@ $files = get_dirs('api/files/');
 							<tbody>
 								<?php
 								foreach ($files as $file) {
+									// Obtem dados referentes a cada sensor/atuador
 									$nome = file_get_contents('api/files/' . $file . '/nome.txt');
 									$valor = file_get_contents('api/files/' . $file . '/valor.txt');
 									$hora = file_get_contents('api/files/' . $file . '/hora.txt');
@@ -121,13 +123,12 @@ $files = get_dirs('api/files/');
 													<input id="' . $file . '" type="checkbox" role="switch" class="form-check-input" ' . ($valor == 'On' ? 'checked' : '') . '>
 												</div>';
 									}
-
 									echo '<tr>
-												<td>' . $nome . '</td>
-												<td>' . $valor . '</td>
-												<td>' . $hora . '</td>
-												<td>' . $switch . '</td>
-											</tr>';
+											<td>' . $nome . '</td>
+											<td>' . $valor . '</td>
+											<td>' . $hora . '</td>
+											<td>' . $switch . '</td>
+										</tr>';
 								}
 								?>
 							</tbody>
@@ -138,6 +139,7 @@ $files = get_dirs('api/files/');
 		</div>
 	</div>
 	<script>
+		// Abrir/Fechar sidebar
 		document.getElementById('sidebarCollapse').addEventListener('click', function() {
 			let sidebar = document.getElementById('sidebar');
 			sidebar.classList.toggle('active');
@@ -149,5 +151,4 @@ $files = get_dirs('api/files/');
 	<!--Bootstrap JS -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
-
 </html>

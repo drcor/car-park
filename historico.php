@@ -1,32 +1,35 @@
 <?php
-require_once('utils.php');
+	require_once('utils.php');
 
-session_start();
+	session_start();
 
-$credentials = analyze_credentials('../credentials.txt');
+	// Obtem credencias do ficheiro
+	$credentials = analyze_credentials('../credentials.txt');
 
-if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credentials)) {
-	header("Location: /");
-}
+	// Se o utilizador não estiver logado
+	if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credentials)) {
+		header("Location: /");
+	}
 
-// Verifica se o utilizador tem permissões para aceder à página
-$user = get_user($_SESSION['username'], $credentials);
-if ($user[2] != 'admin') {
-	header("Location: /dashboard.php");
-}
+	// Verifica se o utilizador tem permissões para aceder à página
+	$user = get_user($_SESSION['username'], $credentials);
+	if ($user[2] != 'admin') {
+		header("Location: /dashboard.php");
+	}
 
+	$files = get_dirs('api/files/');
 
-$files = get_dirs('api/files/');
+	// Verifica se sensor/atuador inserido existe
+	if (!isset($_GET['nome']) or !in_array($_GET['nome'], $files)) {
+		header('Refresh: 3; url=/dashboard.php');
+		die('Sensor não disponível!');
+	}
 
-if (!isset($_GET['nome']) or !in_array($_GET['nome'], $files)) {
-	header('Refresh: 3; url=/dashboard.php');
-	die('Sensor não disponível!');
-}
-
-$nome = file_get_contents('api/files/' . $_GET['nome'] . '/nome.txt');
-$valor = file_get_contents('api/files/' . $_GET['nome'] . '/valor.txt');
-$hora = file_get_contents('api/files/' . $_GET['nome'] . '/hora.txt');
-$logs = parse_logs('api/files/' . $_GET['nome'] . '/log.txt')
+	// Obtem dados correspondentes ao sensor/atuador
+	$nome = file_get_contents('api/files/' . $_GET['nome'] . '/nome.txt');
+	$valor = file_get_contents('api/files/' . $_GET['nome'] . '/valor.txt');
+	$hora = file_get_contents('api/files/' . $_GET['nome'] . '/hora.txt');
+	$logs = parse_logs('api/files/' . $_GET['nome'] . '/log.txt')
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +48,7 @@ $logs = parse_logs('api/files/' . $_GET['nome'] . '/log.txt')
 </head>
 
 <body>
-	<!--- Topbar --->
+	<!--- Topbar -->
 	<nav id="topbar" class="navbar navbar-expand-lg bg-body-tertiary">
 		<div class="container-fluid">
 			<a id="sidebarCollapse" class="btn btn-secondary">
@@ -105,6 +108,7 @@ $logs = parse_logs('api/files/' . $_GET['nome'] . '/log.txt')
 		</div>
 	</div>
 	<script>
+		// Abrir/Fechar sidebar
 		document.getElementById('sidebarCollapse').addEventListener('click', function() {
 			let sidebar = document.getElementById('sidebar');
 			sidebar.classList.toggle('active');

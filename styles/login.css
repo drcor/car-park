@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 * {
     margin: 0;
@@ -8,8 +8,7 @@
 
 body {
     margin: 0;
-    font-family: sans-serif;                   
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -48,3 +47,4 @@ body {
 
 .login .text-center{
     color: rgb(35, 89, 236);
+}

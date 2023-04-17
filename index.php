@@ -1,16 +1,23 @@
 <?php
-session_start();
+    require_once('utils.php');
 
-$username="admin";    
-$password_hash='$2y$10$WhpkqfSmVl3l9ev1jLr0OeG07kvrPcT4R0FQUzOG3tXP11nvHYdAO'; //pass: admin
+    session_start();
 
-if (isset($_POST['username']) and isset($_POST['password'])) {
-    if (password_verify($_POST['password'], $password_hash)) {
-        $_SESSION["username"] = $_POST['username'];
-        header("refresh:1;url=dashboard.php");
+    // Obtem credenciais do ficheiro
+    $credentials = analyze_credentials('../credentials.txt');
+
+    if (isset($_POST['username']) and !empty($_POST['username'])        // Valida o username
+        and isset($_POST['password']) and !empty($_POST['password'])) { // Valida a password
+        
+        // Obtem utilizador do ficheiro
+        $user = get_user($_POST['username'], $credentials);
+
+        // Valida as crenciais inseridas pelo utilizador
+        if (!empty($user) and strcmp($user[0], $_POST['username']) == 0 and password_verify($_POST['password'], $user[1])) {
+            $_SESSION["username"] = $_POST['username'];
+            header("refresh:1;url=dashboard.php");
+        }
     }
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="pt">

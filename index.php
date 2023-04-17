@@ -4,7 +4,12 @@
     session_start();
 
 	// Obtem credencias do ficheiro
-    $credentials = analyze_credentials('../crendentials.txt');
+    $credentials = analyze_credentials('../credentials.txt');
+
+    // Verifica se algum utilizador já se encontra logado
+	if (isset($_SESSION['username']) and is_user($_SESSION['username'], $credentials)) {
+		header("Location: /dashboard.php");
+	}
     
     if (isset($_POST['username']) and !empty($_POST['username'])        // Valida o username
         and isset($_POST['password']) and !empty($_POST['password'])) { // Valida a password

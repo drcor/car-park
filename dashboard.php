@@ -6,8 +6,7 @@
 	// Obtem credencias do ficheiro
 	$credentials = analyze_credentials('../credentials.txt');
 
-
-	// Obtem credencias do ficheiro
+	// Verifica se algum utilizador já se encontra logado
 	if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credentials)) {
 		header("Location: /");
 	}

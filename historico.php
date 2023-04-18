@@ -54,6 +54,7 @@
 			<a id="sidebarCollapse" class="btn btn-secondary">
 				<i class="fas fa-bars"></i>
 			</a>
+			<h4 class="text-white">Histórico</h4>
 		</div>
 	</nav>
 	<div class="wrapper">

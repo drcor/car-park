@@ -3,5 +3,5 @@
 	session_unset();
 	session_destroy();
 	// Redirect to login
-	header("Location: /");
+	header("Location: index.php");
 ?>

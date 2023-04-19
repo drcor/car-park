@@ -8,7 +8,7 @@
 
 	// Verifica se algum utilizador já se encontra logado
 	if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credentials)) {
-		header("Location: /");
+		header("Location: index.php");
 	}
 
 	// Obter crecenciais referentes ao utilizador logado
@@ -29,7 +29,7 @@
 	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
 	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-	<link rel="stylesheet" href="/styles/style.css">
+	<link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
 	<!-- Topbar -->
@@ -50,12 +50,12 @@
 
 			<ul class="flex-column mb-auto components">
 				<li>
-					<a href="/dashboard.php" class="active">Dashboard</a>
+					<a href="dashboard.php" class="active">Dashboard</a>
 				</li>
 			</ul>
 			<ul class="flex-column components">
 				<li>
-					<a href="/logout.php">Log out</a>
+					<a href="logout.php">Log out</a>
 				</li>
 			</ul>
 		</nav>
@@ -82,11 +82,11 @@
 						echo '<div class="col-sm-4">
 								<div class="card text-center mb-3">
 									<div class="card-header fw-bold sensor">' . $nome . '</div>
-									<img src="/images/' . $imagem . '.png" alt="' . $nome . '" class="card-image-top">
+									<img src="images/' . $imagem . '.png" alt="' . $nome . '" class="card-image-top">
 									<div class="card-body">
 										<h5 class="card-title mb-3"><span id="' . $file . '">' . $valor . '</span> ' . get_sensor_symbol($nome) . '</h5>
 										<small><b>Ultima atualização:</b> ' . $hora . '</small>
-										' . ($user[2] == 'admin' ? "<a href=\"/historico.php?nome=$file\" class=\"text-primary\">Histórico</a>" : '') . '
+										' . ($user[2] == 'admin' ? "<a href=\"historico.php?nome=$file\" class=\"text-primary\">Histórico</a>" : '') . '
 									</div>
 								</div>
 							</div>';
@@ -144,7 +144,7 @@
 			sidebar.classList.toggle('active');
 		});
 	</script>
-	<script src="/scripts/dashboard.js"></script>
+	<script src="scripts/dashboard.js"></script>
 	<!--Popper.JS -->
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<!--Bootstrap JS -->

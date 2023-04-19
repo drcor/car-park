@@ -7,7 +7,7 @@ document.querySelectorAll('.form-check-input').forEach(element => {
 			value = 'On';
 		}
 		console.log(this.id);
-		fetch('/api/api.php', {
+		fetch('api/api.php', {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded",

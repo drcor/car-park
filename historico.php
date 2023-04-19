@@ -8,13 +8,13 @@
 
 	// Se o utilizador não estiver logado
 	if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credentials)) {
-		header("Location: /");
+		header("Location: index.php");
 	}
 
 	// Verifica se o utilizador tem permissões para aceder à página
 	$user = get_user($_SESSION['username'], $credentials);
 	if ($user[2] != 'admin') {
-		header("Location: /dashboard.php");
+		header("Location: dashboard.php");
 	}
 
 	$files = get_dirs('api/files/');
@@ -44,7 +44,7 @@
 	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
 	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-	<link rel="stylesheet" href="/styles/style.css">
+	<link rel="stylesheet" href="styles/style.css">
 </head>
 
 <body>
@@ -66,12 +66,12 @@
 
 			<ul class="flex-column mb-auto components">
 				<li>
-					<a href="/dashboard.php">Dashboard</a>
+					<a href="dashboard.php">Dashboard</a>
 				</li>
 			</ul>
 			<ul class="flex-column components">
 				<li>
-					<a href="/logout.php">Log out</a>
+					<a href="logout.php">Log out</a>
 				</li>
 			</ul>
 		</nav>

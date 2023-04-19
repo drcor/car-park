@@ -6,9 +6,12 @@
 	// Obtem credencias do ficheiro
     $credentials = analyze_credentials('../credentials.txt');
 
+    // Variavel de status em caso de falha na autenticação
+    $auth_fail = false;
+
     // Verifica se algum utilizador já se encontra logado
 	if (isset($_SESSION['username']) and is_user($_SESSION['username'], $credentials)) {
-		header("Location: /dashboard.php");
+		header("Location: dashboard.php");
 	}
     
     if (isset($_POST['username']) and !empty($_POST['username'])        // Valida o username
@@ -19,9 +22,9 @@
         // Se as credenciais forem válidas
         if (!empty($user) and strcmp($_POST['username'], $user[0]) == 0 and password_verify($_POST['password'], $user[1])) {
             $_SESSION["username"] = $_POST['username'];
-            header("Location: /dashboard.php");
+            header("Location: dashboard.php");
         } else { // Se não forem válidas
-
+            $auth_fail = true;
         }
     }
 ?>
@@ -60,8 +63,9 @@
                     Escreva a sua password
                 </div>
             </div>
+            <?php echo $auth_fail ? '<span class="bg-warning small p-1 rounded-2">Utilizador ou palavra passe incorretas!</span>' : ''; ?>
             <!-- Butao submit-->
-            <input class="btn btn-primary w-100" type="submit" value="ENTRA">  
+            <input class="btn btn-primary w-100" type="submit" value="ENTRAR">  
         </form>
     </div>
 </body>

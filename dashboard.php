@@ -17,7 +17,6 @@
 	// Obter lista de sensores/atuadores
 	$files = get_dirs('api/files/');
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>

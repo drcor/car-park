@@ -3,16 +3,16 @@
 
     session_start();
 
-	// Obtem credencias do ficheiro
+    // Obtem credencias do ficheiro
     $credentials = analyze_credentials('../credentials.txt');
 
     // Variavel de status em caso de falha na autenticação
     $auth_fail = false;
 
     // Verifica se algum utilizador já se encontra logado
-	if (isset($_SESSION['username']) and is_user($_SESSION['username'], $credentials)) {
-		header("Location: dashboard.php");
-	}
+    if (isset($_SESSION['username']) and is_user($_SESSION['username'], $credentials)) {
+        header("Location: dashboard.php");
+    }
     
     if (isset($_POST['username']) and !empty($_POST['username'])        // Valida o username
         and isset($_POST['password']) and !empty($_POST['password'])) { // Valida a password
@@ -37,9 +37,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Font Roboto -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <!-- ficheiro css-->
     <link rel="stylesheet" href="styles/login.css">
 </head>

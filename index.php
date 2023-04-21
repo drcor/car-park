@@ -34,11 +34,11 @@
 <head>
     <title>Parque de Estacionamento</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ficheiro css-->
+    <link rel="stylesheet" href="styles/login.css?<?php echo time(); ?>">
    <!-- bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- ficheiro css-->
-    <link rel="stylesheet" href="styles/login.css">
 </head>
 <body>
     <!-- Card Login -->
@@ -50,7 +50,7 @@
             <!-- Espaco Username -->
             <div class="form-group was-validated">
                 <label class="form-label" for="username">Username</label>
-                <input class="form-control" id="username" type="text" name="username" required> <!-- required -> obrigatorio escrever-->
+                <input class="form-control" type="text" id="username" name="username" required> <!-- required -> obrigatorio escrever-->
                 <div class="invalid-feedback">
                     Escreva o seu endereço de email
                 </div>
@@ -58,7 +58,7 @@
             <!-- Espaco password -->
             <div class="form-group was-validated">
                 <label class="form-label" for="password">Password</label>
-                <input class="form-control" id="password" type="password" name="password" required> <!-- required -> obrigatorio escrever-->
+                <input class="form-control" type="password" id="password"  name="password" required> <!-- required -> obrigatorio escrever-->
                 <div class="invalid-feedback">
                     Escreva a sua password
                 </div>

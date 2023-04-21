@@ -25,6 +25,11 @@ body {
     padding: 20px;
     border-radius: 12px;
     background: #ffffff;
+    
+}
+
+.login form {
+    font-size: 17px;
 }
 
 .login h1 {
@@ -32,18 +37,18 @@ body {
     margin-bottom: 25px;
 }
 
-.login form {
+
+.login form input[type="submit"] {
     font-size: 20px;
+    margin-top: 15px;
+    letter-spacing: 4px;
+    text-align: center;
 }
 
 .login form .form-group {
     margin-bottom: 12px;
 }
 
-.login form input[type="submit"] {
-    font-size: 20px;
-    margin-top: 15px;
-}
 
 .login .text-center{
     color: rgb(35, 89, 236);

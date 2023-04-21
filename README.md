@@ -1,6 +1,15 @@
 # Parte 1 do projeto Tecnologias de Internet - Grupo 002
 
+## Credenciais de login para entrar no website
+    Utilizador    Password
+     drcor     ->  drcor
+     admin     ->  admin
+     professor ->  professor
+
+
 ## Informações importantes antes de avaliar o website
+    Utilizar preferêncialmente uma versão de PHP igual ou superior a 8.0
+
     O ficheiro 'credentials.txt' deve ficar localizado ao mesmo nível que a pasta 'car-park'.
     Exemplo:
         www/
@@ -16,13 +25,6 @@
     Exemplo:
         <nome utilizador>:<hash da palavra passe>:<permissão do utilzador>
         professor:$2a$10$Cp1VjbscAF/K1ZCFMM3xce7HO8dxNLbSzXuk7QUH47YMiEpt6/Opm:admin
-
-
-## Credenciais de login no website
-    Utilizador    Password
-     drcor     ->  drcor
-     admin     ->  admin
-     professor ->  professor
 
 
 ## Estrutura do projeto
@@ -89,5 +91,5 @@
     └── credentials.txt
     
 ## Autores
-- Diogo Correia
-- Tomás Cardoso
+- Diogo Correia (drcor)
+- Tomás Cardoso (cardosoox)

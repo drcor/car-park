@@ -6,13 +6,13 @@ document.querySelectorAll('.form-check-input').forEach(element => {
 		if (this.checked) {
 			value = 'On';
 		}
-		console.log(this.id);
+		// Envia o POST para atualizar o estado do atuador através da API
 		fetch('api/api.php', {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded",
 				},
-				body: "nome=" + this.id + "&valor=" + value,
+				body: "nome=" + this.name + "&valor=" + value,
 			})
 			.then(() => window.location.reload())
 			.catch(error => console.error(error));

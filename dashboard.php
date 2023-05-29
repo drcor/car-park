@@ -102,47 +102,6 @@ $files = get_dirs('api/files/');
                     }
                     ?>
                 </div>
-                <div class="card mt-4 mb-4">
-                    <div class="card-header">
-                        <b>Tabela de Atuadores</b>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nome</th>
-                                    <th scope="col">Estado</th>
-                                    <th scope="col">Data de Atualização</th>
-                                    <th scope="col">Off/On</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                foreach ($files as $file) {
-                                    // Obtem dados referentes a cada sensor/atuador
-                                    $nome = file_get_contents('api/files/' . $file . '/nome.txt');
-                                    $valor = file_get_contents('api/files/' . $file . '/valor.txt');
-                                    $hora = file_get_contents('api/files/' . $file . '/hora.txt');
-                                    $info = file_get_contents('api/files/' . $file . '/info.txt');
-
-                                    $switch = '';
-                                    if ($info == 'atuador') {
-                                        $switch = '<div class="form-check form-switch">
-                                                    <input name="' . $file . '" type="checkbox" role="switch" class="form-check-input" ' . ($valor == 'On' ? 'checked' : '') . '>
-                                                </div>';
-                                    }
-                                    echo '<tr>
-                                            <td>' . $nome . '</td>
-                                            <td>' . $valor . '</td>
-                                            <td>' . $hora . '</td>
-                                            <td>' . $switch . '</td>
-                                        </tr>';
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -163,7 +122,6 @@ $files = get_dirs('api/files/');
                 // check if the response is ok
                 if (response.ok) {
                     const textValue = await response.text();
-                    // console.log(textValue)
                     spanHora.innerHTML = textValue; // Atualiza a hora na pagina
                 }
             }
@@ -176,7 +134,6 @@ $files = get_dirs('api/files/');
                 // check if the response is ok
                 if (response.ok) {
                     const textValue = await response.text();
-                    // console.log(textValue)
                     spanValor.innerHTML = textValue; // Atualiza o estado na pagina
 
                     // Atualiza o botão switch caso seja um atuador
@@ -190,8 +147,6 @@ $files = get_dirs('api/files/');
                     }
 
                     // Atualiza a imagem
-                    console.log("Valor: " + textValue)
-
                     // Cria o caminha para obter a imagem
                     let imageName = '';
                     let primeiroNome = nome.split(" ")[0];
@@ -235,7 +190,6 @@ $files = get_dirs('api/files/');
                     if (response.ok) {
                         const textValue = await response.text();
                         const valores = textValue.split(';');
-                        console.log(textValue + ' - ' + valores);
 
                         updateFromAPI(valores[0], valores[1], valores[2]);
                     } else {

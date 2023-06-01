@@ -71,8 +71,8 @@
     // Retorna todos os dados do utilizador associados ao nome passado por parâmetro
     function get_user($username, $credentials) {
         $user = array();
-        foreach ($credentials as $row) {
-            if ($username == $row[0]) {
+        foreach ($credentials as $row) {    // Para cada linha do ficheiro de credenciais
+            if ($username == $row[0]) {     // Verifica se são as credencias do utilizador
                 $user = $row;
                 break;
             }

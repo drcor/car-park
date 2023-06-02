@@ -15,7 +15,7 @@ if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credential
 $user = get_user($_SESSION['username'], $credentials);
 
 // Obter lista de sensores/atuadores
-$files = get_dirs('api/files/');
+$files = get_dirs_list('api/files/');
 ?>
 <!DOCTYPE html>
 <html lang="en">

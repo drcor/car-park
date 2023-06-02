@@ -1,35 +1,45 @@
 <?php
-    require_once('utils.php');
+require_once('utils.php');
 
-    session_start();
+session_start();
 
-    // Obtem credencias do ficheiro
-    $credentials = analyze_credentials('../credentials.txt');
+// Obtem credencias do ficheiro
+$credentials = analyze_credentials('../credentials.txt');
 
-    // Se o utilizador não estiver logado
-    if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credentials)) {
-        header("Location: index.php");
-    }
+// Se o utilizador não estiver logado
+if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credentials)) {
+    header("Location: index.php");
+}
 
-    // Verifica se o utilizador tem permissões para aceder à página
-    $user = get_user($_SESSION['username'], $credentials);
-    if ($user[2] != 'admin') {
-        header("Location: dashboard.php");
-    }
+// Verifica se o utilizador tem permissões para aceder à página
+$user = get_user($_SESSION['username'], $credentials);
+if ($user[2] != 'admin') {
+    header("Location: dashboard.php");
+}
 
-    $files = get_dirs('api/files/');
+$files = get_dirs_list('api/files/');
 
-    // Verifica se sensor/atuador inserido existe
-    if (!isset($_GET['nome']) or !in_array($_GET['nome'], $files)) {
-        header('Refresh: 3; url=/dashboard.php');
-        die('Sensor não disponível!');
-    }
+// Verifica se foi passado o parâmetro correto
+if (!isset($_GET['nome'])) {
+    header('Refresh: 3; url=/dashboard.php');
+    die('Pedido incompleto!');
+}
 
+// Verifica se sensor/atuador inserido existe
+if (in_array($_GET['nome'], $files)) {
     // Obtem dados correspondentes ao sensor/atuador
     $nome = file_get_contents('api/files/' . $_GET['nome'] . '/nome.txt');
     $valor = file_get_contents('api/files/' . $_GET['nome'] . '/valor.txt');
     $hora = file_get_contents('api/files/' . $_GET['nome'] . '/hora.txt');
-    $logs = parse_logs('api/files/' . $_GET['nome'] . '/log.txt')
+    $logs = parse_logs('api/files/' . $_GET['nome'] . '/log.txt');
+} elseif ($_GET['nome'] == 'webcam') {    // Se for o histórico sobre as imagens
+    $image_files = get_files_list('api/images/older/'); // Obtem a lista do historico de webcam
+    arsort($image_files);                             // e ordena descendentemente
+
+} else {    // Caso não tenha sido passado o nome de um sensor/atuador ou webcam
+    header('Refresh: 3; url=/dashboard.php');
+    die('Sensor não disponível!');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,34 +88,80 @@
         </nav>
         <!-- Page Content -->
         <div id="content">
+            <!-- Sensor/Actuator/Webcam --->
             <div class="container pt-4">
-                <h2><?php echo $nome; ?></h2>
+                <?php
+                if ($_GET['nome'] != 'webcam') {
+                ?>
 
-                <div class="card mt-4 mb-4">
-                    <div class="card-header">
-                        <b>Tabela de Logs</b>
+                    <h2><?php echo $nome; ?></h2>
+
+                    <div class="card mt-4 mb-4">
+                        <div class="card-header">
+                            <b>Tabela de Logs</b>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Data de Atualização</th>
+                                        <th scope="col">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    foreach ($logs as $row) {
+                                        echo '<tr>
+                                                    <td>' . $row[0] . '</td>
+                                                    <td>' . $row[1] . '</td>
+                                                </tr>';
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Data de Atualização</th>
-                                    <th scope="col">Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                foreach ($logs as $row) {
-                                    echo '<tr>
-                                                <td>' . $row[0] . '</td>
-                                                <td>' . $row[1] . '</td>
-                                            </tr>';
-                                }
-                                ?>
-                            </tbody>
-                        </table>
+                <?php
+                } else {
+                ?>
+                    <h2>Webcam</h2>
+                    <div class="row mt-4">
+                        <div class="col-sm">
+                            <?php
+                            // Mostra a imagem atual da webcam
+                            $image_type = mime_content_type("api/images/webcam.jpg");
+                            $image_data = file_get_contents("api/images/webcam.jpg");
+                            $image_data_base64 = base64_encode($image_data);
+                            echo '<img src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="" class="img-fluid">';
+                            ?>
+                            <span>Atual</span>
+                        </div>
+
+                        <?php
+                        if (count($image_files) == 0) {
+                            echo '<h3>Não há imagens no histórico</h3>';
+                        } else {
+                            foreach ($image_files as $image) {
+                                // Obtem a parte do nome da imagem que contem a data de upload e converte para inteiro
+                                $image_time = intval(explode(".", explode("_", $image)[1])[0]);
+
+                                // Lê a imagem e converte-a para base64
+                                $image_type = mime_content_type("api/images/older/" . $image);
+                                $image_data = file_get_contents("api/images/older/" . $image);
+                                $image_data_base64 = base64_encode($image_data);
+
+                                // Mostra as imagens em forma de tabela
+                                echo '<div class="col-3">
+                                            <img src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="" class="img-fluid">
+                                            <span>' . date("d/m/Y H:i:s", $image_time) . '</span>
+                                        </div>';
+                            }
+                        }
+                        ?>
                     </div>
-                </div>
+                <?php
+                }
+                ?>
             </div>
         </div>
     </div>

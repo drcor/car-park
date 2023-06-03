@@ -33,6 +33,7 @@ if (in_array($_GET['nome'], $files)) {
     $hora = file_get_contents('api/files/' . $_GET['nome'] . '/hora.txt');
     $logs = parse_logs('api/files/' . $_GET['nome'] . '/log.txt');
 } elseif ($_GET['nome'] == 'webcam') {    // Se for o histórico sobre as imagens
+    $nome = "Webcam";
     $image_files = get_files_list('api/images/older/'); // Obtem a lista do historico de webcam
     arsort($image_files);                             // e ordena descendentemente
 
@@ -90,12 +91,10 @@ if (in_array($_GET['nome'], $files)) {
         <div id="content">
             <!-- Sensor/Actuator/Webcam --->
             <div class="container pt-4">
+                <h2><?php echo $nome; ?></h2>
                 <?php
                 if ($_GET['nome'] != 'webcam') {
                 ?>
-
-                    <h2><?php echo $nome; ?></h2>
-
                     <div class="card mt-4 mb-4">
                         <div class="card-header">
                             <b>Tabela de Logs</b>
@@ -124,7 +123,6 @@ if (in_array($_GET['nome'], $files)) {
                 <?php
                 } else {
                 ?>
-                    <h2>Webcam</h2>
                     <div class="row mt-4">
                         <div class="col-sm">
                             <?php

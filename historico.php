@@ -52,6 +52,7 @@ if (in_array($_GET['nome'], $files)) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <!-- Font Roboto -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -100,6 +101,7 @@ if (in_array($_GET['nome'], $files)) {
                             <b>Tabela de Logs</b>
                         </div>
                         <div class="card-body">
+                            <canvas id="chart" style="width:100%;max-width:600px;"></canvas>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -169,6 +171,36 @@ if (in_array($_GET['nome'], $files)) {
             let sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('active');
         });
+
+        <?php 
+
+                //diogo
+
+        ?>
+        
+        const xValues = ["10:30 11/12/2023","10:30 11/12/2023"];
+        const yValues = [0,1];
+
+        new Chart("chart", {
+        type: "line",
+        data: {
+            labels: xValues,
+            datasets: [{
+            fill: true,
+            lineTension: 0,
+            backgroundColor: "rgba(173, 219, 255, 0.6)",
+            borderColor: "rgba(0,0,255,0.1)",
+            data: yValues
+            }]
+        },
+        options: {
+            legend: {display: false},
+            scales: {
+            yAxes: [{ticks: {min:0, max:2}}],
+            }
+        }
+        });
+     
     </script>
     <!-- Popper.JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

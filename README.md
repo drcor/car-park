@@ -1,4 +1,4 @@
-# Parte 1 do projeto Tecnologias de Internet - Grupo 002
+# Parte 2 do projeto Tecnologias de Internet - Grupo 002
 
 ## Credenciais de login para entrar no website
     Utilizador    Password

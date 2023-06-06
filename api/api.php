@@ -33,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Obter específicamente a data da última atualização
         if (isset($_GET['tipo']) and $_GET['tipo'] == "hora") {
             echo file_get_contents('files/' . $_GET['nome'] . '/hora.txt');
+        } elseif (isset($_GET['tipo']) and $_GET['tipo'] == "log") { // Obter os logs do sensor/atuador
+            echo file_get_contents('files/' . $_GET['nome'] . '/log.txt');
         } else {    // Senão retorna normalmente o valor do sensor/atuador
             echo file_get_contents('files/' . $_GET['nome'] . '/valor.txt');
         }

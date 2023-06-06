@@ -101,8 +101,10 @@ if (in_array($_GET['nome'], $files)) {
                             <b>Tabela de Logs</b>
                         </div>
                         <div class="card-body">
-                            <canvas id="chart" style="width:100%;max-width:600px;"></canvas>
-                            <table class="table table-bordered">
+                            <div class="chart-container" style="width:100%">
+                                <canvas id="chart"></canvas>
+                            </div>
+                            <table class="table table-bordered mt-3">
                                 <thead>
                                     <tr>
                                         <th scope="col">Data de Atualização</th>
@@ -172,35 +174,55 @@ if (in_array($_GET['nome'], $files)) {
             sidebar.classList.toggle('active');
         });
 
-        <?php 
+        const getLogs = async () => {
+            const response = await fetch("/api/api.php?nome=<?php echo $_GET['nome']; ?>&tipo=log");
+            // check if the response is ok
+            if (response.ok) {
+                const textValue = await response.text();
+                console.log(textValue);
 
-                //diogo
+                let lines = textValue.trim().split("\r\n");
 
-        ?>
-        
-        const xValues = ["10:30 11/12/2023","10:30 11/12/2023"];
-        const yValues = [0,1];
+                let xValues = new Array(),
+                    yValues = new Array();
 
-        new Chart("chart", {
-        type: "line",
-        data: {
-            labels: xValues,
-            datasets: [{
-            fill: true,
-            lineTension: 0,
-            backgroundColor: "rgba(173, 219, 255, 0.6)",
-            borderColor: "rgba(0,0,255,0.1)",
-            data: yValues
-            }]
-        },
-        options: {
-            legend: {display: false},
-            scales: {
-            yAxes: [{ticks: {min:0, max:2}}],
+                lines.forEach(line => {
+                    let [date, value] = line.split(";");
+                    xValues.push(date);
+
+                    if (value === "On") {
+                        yValues.push(1);
+                    } else if (value === "Off") {
+                        yValues.push(0);
+                    } else {
+                        yValues.push(value);
+                    }
+                });
+
+                // Show only the last 10 elements of the log
+                new Chart("chart", {
+                    type: "line",
+                    data: {
+                        labels: xValues.slice(-10),
+                        datasets: [{
+                            fill: true,
+                            lineTension: 0,
+                            backgroundColor: "rgba(173, 219, 255, 0.6)",
+                            borderColor: "rgba(0,0,255,0.1)",
+                            data: yValues.slice(-10)
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        legend: {
+                            display: false
+                        }
+                    }
+                });
             }
         }
-        });
-     
+        getLogs().catch(error => console.error(error));
     </script>
     <!-- Popper.JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

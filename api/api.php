@@ -38,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {    // Senão retorna normalmente o valor do sensor/atuador
             echo file_get_contents('files/' . $_GET['nome'] . '/valor.txt');
         }
+    } else if (isset($_GET['nome']) and $_GET['nome'] == "webcam") {    // Obter imagem de webcam
+        echo file_get_contents('images/webcam.jpg');
     } else {
         echo "Faltam parametros no GET";
         http_response_code(400);

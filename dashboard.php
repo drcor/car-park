@@ -66,24 +66,6 @@ $files = get_dirs_list('api/files/');
         <div id="content">
             <div class="container pt-2">
                 <div class="row">
-                    <div class="col-sm-4">
-                        <div class="card text-center mb-3">
-                            <div class="card-header fw-bold sensor">Webcam</div>
-                                <?php
-                                // Mostra a imagem atual da webcam
-                                $image_hora = date("Y/m/d H:i:s", filectime("api/images/webcam.jpg"));
-                                $image_type = mime_content_type("api/images/webcam.jpg");
-                                $image_data = file_get_contents("api/images/webcam.jpg");
-                                $image_data_base64 = base64_encode($image_data);
-                                echo '<img id="webcam-image" src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="webcam" class="card-image-top">';
-                                ?>
-                                <div class="card-body">
-                                    <small><b>Última atualização:</b> <span id="webcam-hora"><?php echo $image_hora; ?></span></small>
-                                    <?php echo ($user[2] == 'admin' ? '<a href="historico.php?nome=webcam" class="text-primary">Histórico</a>' : '') ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <?php
                     foreach ($files as $file) {
                         // Obtem dados referentes a cada sensor/atuador
@@ -119,6 +101,24 @@ $files = get_dirs_list('api/files/');
                             </div>';
                     }
                     ?>
+                    <div class="col-sm-4">
+                        <div class="card text-center mb-3">
+                            <div class="card-header fw-bold sensor">Webcam</div>
+                                <?php
+                                // Mostra a imagem atual da webcam
+                                $image_hora = date("Y/m/d H:i:s", filectime("api/images/webcam.jpg"));
+                                $image_type = mime_content_type("api/images/webcam.jpg");
+                                $image_data = file_get_contents("api/images/webcam.jpg");
+                                $image_data_base64 = base64_encode($image_data);
+                                echo '<img id="webcam-image" src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="webcam" class="card-image-top">';
+                                ?>
+                                <div class="card-body">
+                                    <small><b>Última atualização:</b> <span id="webcam-hora"><?php echo $image_hora; ?></span></small>
+                                    <?php echo ($user[2] == 'admin' ? '<a href="historico.php?nome=webcam" class="text-primary">Histórico</a>' : '') ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

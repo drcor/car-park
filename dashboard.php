@@ -95,7 +95,7 @@ $files = get_dirs_list('api/files/');
                                         <h5 class="card-title mb-3"><span id="' . $file . '">' . $valor . '</span> ' . get_sensor_symbol($nome) . '</h5>
                                         <small><b>Última atualização:</b> <span id="' . $file . '-hora">' . $hora . '</span></small>
                                         ' . ($user[2] == 'admin' ? "<a href=\"historico.php?nome=$file\" class=\"text-primary\">Histórico</a>" : '') .
-                                        $switch . '
+                            $switch . '
                                     </div>
                                 </div>
                             </div>';
@@ -104,24 +104,24 @@ $files = get_dirs_list('api/files/');
                     <div class="col-sm-4">
                         <div class="card text-center mb-3">
                             <div class="card-header fw-bold sensor">Webcam</div>
-                                <?php
-                                // Mostra a imagem atual da webcam
-                                $image_hora = date("Y/m/d H:i:s", filectime("api/images/webcam.jpg"));
-                                $image_type = mime_content_type("api/images/webcam.jpg");
-                                $image_data = file_get_contents("api/images/webcam.jpg");
-                                $image_data_base64 = base64_encode($image_data);
-                                echo '<img id="webcam-image" src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="webcam" class="card-image-top">';
-                                ?>
-                                <div class="card-body">
-                                    <small><b>Última atualização:</b> <span id="webcam-hora"><?php echo $image_hora; ?></span></small>
-                                    <?php echo ($user[2] == 'admin' ? '<a href="historico.php?nome=webcam" class="text-primary">Histórico</a>' : '') ?>
-                                </div>
+                            <?php
+                            // Mostra a imagem atual da webcam
+                            $image_hora = date("Y/m/d H:i:s", filectime("api/images/webcam.jpg"));
+                            $image_type = mime_content_type("api/images/webcam.jpg");
+                            $image_data = file_get_contents("api/images/webcam.jpg");
+                            $image_data_base64 = base64_encode($image_data);
+                            echo '<img id="webcam-image" src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="webcam" class="card-image-top img-fluid">';
+                            ?>
+                            <div class="card-body">
+                                <small><b>Última atualização:</b> <span id="webcam-hora"><?php echo $image_hora; ?></span></small>
+                                <?php echo ($user[2] == 'admin' ? '<a href="historico.php?nome=webcam" class="text-primary">Histórico</a>' : '') ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     <script>
         // Abrir/Fechar sidebar
         document.getElementById('sidebarCollapse').addEventListener('click', function() {
@@ -185,6 +185,19 @@ $files = get_dirs_list('api/files/');
             getValor().catch(error => console.error(error));
         }
 
+        // Function to update webcam
+        function updateWebcam() {
+
+            // Obtem a imagem correspondente ao sensor/atuador
+            const image = document.getElementById("webcam-image");
+            fetch("/api/api.php?nome=webcam")
+                .then((response) => response.blob())
+                .then((blob) => {
+                    const objectURL = URL.createObjectURL(blob);
+                    image.src = objectURL;
+                });
+        }
+
         // Define um evento de click para todos os botões switch
         document.querySelectorAll('.form-check-input').forEach(element => {
             element.addEventListener('click', async function() {
@@ -227,6 +240,7 @@ $files = get_dirs_list('api/files/');
             echo "setInterval(updateFromAPI, 5000, '" . $file . "', '" . $nome . "', " . ($info == 'atuador' ? 'true' : 'false') . ");\n";
         }
         ?>
+        setInterval(updateWebcam, 5000);
     </script>
     <!--Popper.JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

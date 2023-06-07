@@ -110,7 +110,7 @@ $files = get_dirs_list('api/files/');
                             $image_type = mime_content_type("api/images/webcam.jpg");
                             $image_data = file_get_contents("api/images/webcam.jpg");
                             $image_data_base64 = base64_encode($image_data);
-                            echo '<img id="webcam-image" src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="webcam" class="card-image-top img-fluid">';
+                            echo '<img id="webcam-image" src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="Sem dados de webcam‽" class="card-image-top img-fluid">';
                             ?>
                             <div class="card-body">
                                 <small><b>Última atualização:</b> <span id="webcam-hora"><?php echo $image_hora; ?></span></small>

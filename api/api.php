@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         file_put_contents('files/' . $_POST['nome'] . '/valor.txt', $_POST['valor']);
         file_put_contents('files/' . $_POST['nome'] . '/hora.txt', $date);
-        file_put_contents('files/' . $_POST['nome'] . '/log.txt', $date . ';' . $_POST['valor'] . PHP_EOL, FILE_APPEND);
+        file_put_contents('files/' . $_POST['nome'] . '/log.txt', $date . ';' . $_POST['valor'] . "\r\n", FILE_APPEND);
 
         $nome = file_get_contents('files/' . $_POST['nome'] . '/nome.txt');
         $info = file_get_contents('files/' . $_POST['nome'] . '/info.txt');

@@ -217,6 +217,12 @@ if (in_array($_GET['nome'], $files)) {
                         maintainAspectRatio: true,
                         legend: {
                             display: false
+                        },
+                        scales: {
+                            y: {
+                                suggestedMin: 0,
+                                suggestedMax: 100
+                            }
                         }
                     }
                 });

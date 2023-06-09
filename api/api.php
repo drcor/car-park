@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (
         isset($_POST['nome'])
         and in_array($_POST['nome'], $files)                        // Verifica se o nome do sensor/atuador existe
-        and (isset($_POST['valor']) and !empty($_POST['valor']))  // Verifica se o valor e a hora estão atribuidos e não são nulos
+        and (isset($_POST['valor']) and !empty($_POST['valor']))    // Verifica se o valor e a hora estão atribuidos e não são nulos
     ) {
 
         $timestamp = time(); // Obter o timestamp atual

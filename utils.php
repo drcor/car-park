@@ -33,9 +33,8 @@ function get_sensor_symbol($sensor_name) {
         case 'Temperatura':
             return 'ºC';
         case 'Humidade':
-            return '%';
         case 'CO2':
-            return 'ppm';
+            return '%';
         default:
             return '';
     }

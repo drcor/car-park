@@ -203,13 +203,13 @@ if (in_array($_GET['nome'], $files)) {
                 new Chart("chart", {
                     type: "line",
                     data: {
-                        labels: xValues.slice(-10),
+                        labels: xValues.slice(-20),
                         datasets: [{
                             fill: true,
                             lineTension: 0,
                             backgroundColor: "rgba(173, 219, 255, 0.6)",
                             borderColor: "rgba(0,0,255,0.1)",
-                            data: yValues.slice(-10)
+                            data: yValues.slice(-20)
                         }]
                     },
                     options: {

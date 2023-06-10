@@ -35,6 +35,8 @@ function get_sensor_symbol($sensor_name) {
         case 'Humidade':
         case 'CO2':
             return '%';
+        case 'Ventoinha':
+            return 'rps';
         default:
             return '';
     }

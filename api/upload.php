@@ -4,7 +4,6 @@
 	header('Content-Type: text/html; charset=UTF-8');
 	$options = get_dirs_list('files/');
 
-    // print_r($_FILES);
 	// Método POST
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_FILES['imagem'])                            // Verifica se foi definida alguma imagem como upload
@@ -40,10 +39,9 @@
             $image_files = get_files_list('images/older/'); // Obtem a lista do historico de webcam
             asort($image_files);                                // e ordena ascendentemente
             print_r($image_files);
-            if (count($image_files) >= 12) {
+            if (count($image_files) >= 13) {
                 unlink("images/older/".$image_files[0]);
             }
-
 
         } else {
             echo 'Imagem não encontrada';

@@ -13,9 +13,6 @@ if (!isset($_SESSION['username']) or !is_user($_SESSION['username'], $credential
 
 // Obter crecenciais referentes ao utilizador logado
 $user = get_user($_SESSION['username'], $credentials);
-
-// Obter lista de sensores/atuadores
-$files = get_dirs_list('api/files/');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,6 +20,7 @@ $files = get_dirs_list('api/files/');
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
@@ -65,59 +63,18 @@ $files = get_dirs_list('api/files/');
         <!-- Page Content -->
         <div id="content">
             <div class="container pt-2">
-                <div class="row">
-                    <?php
-                    foreach ($files as $file) {
-                        // Obtem dados referentes a cada sensor/atuador
-                        $nome = file_get_contents('api/files/' . $file . '/nome.txt');
-                        $valor = file_get_contents('api/files/' . $file . '/valor.txt');
-                        $hora = file_get_contents('api/files/' . $file . '/hora.txt');
-                        $info = file_get_contents('api/files/' . $file . '/info.txt');
-
-                        // Configura automaticamente o nome da imagem para cada sensor/atuador
-                        $primeiro_nome = explode(' ', $nome)[0];
-                        $switch = '';
-                        if ($info == 'atuador') {
-                            $switch = '<div class="form-check form-switch">
-                                            <label for="' . $file . '-switch">Off/On</label>
-                                            <input id="' . $file . '-switch" name="' . $file . '" type="checkbox" role="switch" class="form-check-input" ' . ($valor == 'On' ? 'checked' : '') . '>
-                                        </div>';
-                            $imagem = strtolower($primeiro_nome . '_' . $valor);
-                        } else {
-                            $imagem = strtolower($primeiro_nome);
-                        }
-
-                        echo '<div class="col-sm-4">
-                                <div class="card text-center mb-3">
-                                    <div class="card-header fw-bold sensor">' . $nome . '</div>
-                                    <img id="' . $file . '-image" src="images/' . $imagem . '.png" alt="' . $nome . '" class="card-image-top">
-                                    <div class="card-body">
-                                        <h5 class="card-title mb-3"><span id="' . $file . '">' . $valor . '</span> ' . get_sensor_symbol($nome) . '</h5>
-                                        <small><b>Última atualização:</b> <span id="' . $file . '-hora">' . $hora . '</span></small>
-                                        ' . ($user[2] == 'admin' ? "<a href=\"historico.php?nome=$file\" class=\"text-primary\">Histórico</a>" : '') .
-                            $switch . '
-                                    </div>
-                                </div>
-                            </div>';
-                    }
-                    ?>
+                <div class="row" id="files-cards">
                     <div class="col-sm-4">
                         <div class="card text-center mb-3">
                             <div class="card-header fw-bold sensor">Webcam</div>
-                            <?php
-                            // Mostra a imagem atual da webcam
-                            $image_hora = date("Y/m/d H:i:s", filectime("api/images/webcam.jpg"));
-                            $image_type = mime_content_type("api/images/webcam.jpg");
-                            $image_data = file_get_contents("api/images/webcam.jpg");
-                            $image_data_base64 = base64_encode($image_data);
-                            echo '<img id="webcam-image" src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="Sem dados de webcam‽" class="card-image-top img-fluid">';
-                            ?>
+                            <img id="webcam-image" src="" alt="Sem dados de webcam‽" class="card-image-top img-fluid">
                             <div class="card-body">
-                                <small><b>Última atualização:</b> <span id="webcam-hora"><?php echo $image_hora; ?></span></small>
+                                <small><b>Última atualização:</b> <span id="webcam-hora"></span></small>
                                 <?php echo ($user[2] == 'admin' ? '<a href="historico.php?nome=webcam" class="text-primary">Histórico</a>' : '') ?>
                             </div>
                         </div>
                     </div>
+                    <!-- Os outros sensores/atuadores vão aparecer aqui -->
                 </div>
             </div>
         </div>
@@ -129,9 +86,108 @@ $files = get_dirs_list('api/files/');
             sidebar.classList.toggle('active');
         });
 
-        function updateFromAPI(id, nome, isAtuador = false) {
-            // console.log("Updated " + id + "");
+        // Inicializa os sensores/atuadores
+        function setFilesCards() {
+            // Obtem a de sensores/atuadores da API
+            const getFiles = async () => {
+                const response = await fetch('/api/api.php?options');
+                // check if the response is ok
+                if (response.ok) {
+                    const textValue = await response.text();
+                    let files = textValue.trim().split("\r\n").sort(); // Separa cada nome de sensor/atuador em strings diferentes
 
+                    files.forEach(file => {
+                        const getFileData = async () => {
+                            // Obtem todos os dados sobre os sensores/atuadores
+                            const responseNome = await fetch('/api/api.php?nome=' + file + '&tipo=desc');
+                            const responseInfo = await fetch('/api/api.php?nome=' + file + '&tipo=info');
+                            const responseHora = await fetch('/api/api.php?nome=' + file + '&tipo=hora');
+                            const responseSimb = await fetch('/api/api.php?nome=' + file + '&tipo=simbolo');
+                            const responseValor = await fetch('/api/api.php?nome=' + file);
+
+                            // check if the response is ok
+                            if (responseNome.ok && responseInfo.ok) {
+                                const nome = await responseNome.text();
+                                const info = await responseInfo.text();
+                                const valor = await responseValor.text();
+                                const hora = await responseHora.text();
+                                const simb = await responseSimb.text();
+
+                                // Configura automaticamente o nome da imagem para cada sensor/atuador
+                                let primeiro_nome = nome.split(' ')[0];
+                                let switc = '';
+                                let imagem = '';
+                                if (info === 'atuador') {
+                                    switc = `<div class="form-check form-switch">
+                                                <label for="${file}-switch">Off/On</label>
+                                                <input id="${file}-switch" name="${file}" type="checkbox" role="switch" class="form-check-input" ${(valor === 'On' ? 'checked' : '')}>
+                                            </div>`;
+                                    imagem = (primeiro_nome + '_' + valor).toLowerCase();
+                                } else {
+                                    imagem = primeiro_nome.toLowerCase();
+                                }
+
+                                // Adiciona o novo card do sensor/atuador na dashboard com os dados
+                                let filesCards = document.getElementById("files-cards");
+                                filesCards.innerHTML += `<div class="col-sm-4">
+                                        <div class="card text-center mb-3">
+                                            <div class="card-header fw-bold sensor">${nome}</div>
+                                            <img id="${file}-image" src="images/${imagem}.png" alt="${nome}" class="card-image-top">
+                                            <div class="card-body">
+                                                <h5 class="card-title mb-3"><span id="${file}">${valor}</span> ${simb}</h5>
+                                                <small><b>Última atualização:</b> <span id="${file}-hora">${hora}</span></small>
+                                                <?php echo ($user[2] == 'admin' ? "<a href=\"historico.php?nome=\${file}\" class=\"text-primary\">Histórico</a>" : '') ?>
+                                                ${switc}
+                                            </div>
+                                        </div>
+                                    </div>`;
+
+                                setInterval(updateFromAPI, 5000, file, nome, (info === 'atuador' ? true : false));
+                            }
+
+                            // Define um evento de click para todos os botões switch
+                            document.querySelectorAll('.form-check-input').forEach(element => {
+                                element.addEventListener('click', async function() {
+                                    let value = 'Off';
+
+                                    // Se o switch for ativado define o valor a enviar como ligado
+                                    if (this.checked) {
+                                        value = 'On';
+                                    }
+                                    // Envia o POST para atualizar o estado do atuador através da API
+                                    const sendPost = async () => {
+                                        const response = await fetch('/api/api.php', {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/x-www-form-urlencoded",
+                                            },
+                                            body: "nome=" + this.name + "&valor=" + value,
+                                        });
+
+                                        if (response.ok) {
+                                            const textValue = await response.text();
+                                            const valores = textValue.split(';');
+
+                                            updateFromAPI(valores[0], valores[1], valores[2]);
+                                        } else {
+                                            // Caso ocorra algum erro retorna o botão switch ao estado original
+                                            this.checked = false;
+                                        }
+                                    }
+                                    sendPost().catch(error => console.error(error));
+                                });
+                            });
+                        }
+
+                        getFileData().catch(error => console.error(error));
+                    });
+                }
+            }
+            getFiles().catch(error => console.error(error));
+        }
+        setFilesCards();
+
+        function updateFromAPI(id, nome, isAtuador = false) {
             // Obtem a data e hora da ultima atualização do sensor/atuador na API
             let spanHora = document.getElementById(id + "-hora");
             const getHora = async () => {
@@ -187,7 +243,6 @@ $files = get_dirs_list('api/files/');
 
         // Function to update webcam
         function updateWebcam() {
-
             // Obtem a imagem correspondente ao sensor/atuador
             const image = document.getElementById("webcam-image");
             fetch("/api/api.php?nome=webcam")
@@ -196,40 +251,19 @@ $files = get_dirs_list('api/files/');
                     const objectURL = URL.createObjectURL(blob);
                     image.src = objectURL;
                 });
+
+            // Obtem a hora da ultima atualizaçao da webcam e mostra na dashboard
+            let spanHora = document.getElementById("webcam-hora");
+            const getHora = async () => {
+                const response = await fetch('/api/api.php?nome=webcam&tipo=hora');
+                // check if the response is ok
+                if (response.ok) {
+                    const textValue = await response.text();
+                    spanHora.innerHTML = textValue; // Atualiza a hora na pagina
+                }
+            }
+            getHora().catch(error => console.error(error));
         }
-
-        // Define um evento de click para todos os botões switch
-        document.querySelectorAll('.form-check-input').forEach(element => {
-            element.addEventListener('click', async function() {
-                let value = 'Off';
-
-                // Se o switch for ativado define o valor a enviar como ligado
-                if (this.checked) {
-                    value = 'On';
-                }
-                // Envia o POST para atualizar o estado do atuador através da API
-                const sendPost = async () => {
-                    const response = await fetch('api/api.php', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                        },
-                        body: "nome=" + this.name + "&valor=" + value,
-                    });
-
-                    if (response.ok) {
-                        const textValue = await response.text();
-                        const valores = textValue.split(';');
-
-                        updateFromAPI(valores[0], valores[1], valores[2]);
-                    } else {
-                        // Caso ocorra algum erro retorna o botão switch ao estado original
-                        this.checked = false;
-                    }
-                }
-                sendPost().catch(error => console.error(error));
-            });
-        });
 
         <?php
         foreach ($files as $file) {
@@ -240,6 +274,7 @@ $files = get_dirs_list('api/files/');
             echo "setInterval(updateFromAPI, 5000, '" . $file . "', '" . $nome . "', " . ($info == 'atuador' ? 'true' : 'false') . ");\n";
         }
         ?>
+        updateWebcam();
         setInterval(updateWebcam, 5000);
     </script>
     <!--Popper.JS -->

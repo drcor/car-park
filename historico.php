@@ -48,6 +48,7 @@ if (in_array($_GET['nome'], $files)) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <title>Histórico - <?php echo $nome ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
@@ -96,7 +97,7 @@ if (in_array($_GET['nome'], $files)) {
                 <?php
                 if ($_GET['nome'] != 'webcam') {
                 ?>
-                    <div class="card mt-4 mb-4">
+                    <div class="card mt-4 mb-4"  id="logs-container">
                         <div class="card-header">
                             <b>Tabela de Logs</b>
                         </div>
@@ -111,15 +112,8 @@ if (in_array($_GET['nome'], $files)) {
                                         <th scope="col">Estado</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <?php
-                                    foreach ($logs as $row) {
-                                        echo '<tr>
-                                                    <td>' . $row[0] . '</td>
-                                                    <td>' . $row[1] . '</td>
-                                                </tr>';
-                                    }
-                                    ?>
+                                <tbody id="historico-logs">
+                                    <!-- Aqui é colocado o historico de logs -->
                                 </tbody>
                             </table>
                         </div>
@@ -127,39 +121,8 @@ if (in_array($_GET['nome'], $files)) {
                 <?php
                 } else {
                 ?>
-                    <div class="row mt-4">
-                        <div class="col-sm">
-                            <?php
-                            // Mostra a imagem atual da webcam
-                            $image_type = mime_content_type("api/images/webcam.jpg");
-                            $image_data = file_get_contents("api/images/webcam.jpg");
-                            $image_data_base64 = base64_encode($image_data);
-                            echo '<img src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="" class="img-fluid">';
-                            ?>
-                            <span>Atual</span>
-                        </div>
-
-                        <?php
-                        if (count($image_files) == 0) {
-                            echo '<h3>Não há imagens no histórico</h3>';
-                        } else {
-                            foreach ($image_files as $image) {
-                                // Obtem a parte do nome da imagem que contem a data de upload e converte para inteiro
-                                $image_time = intval(explode(".", explode("_", $image)[1])[0]);
-
-                                // Lê a imagem e converte-a para base64
-                                $image_type = mime_content_type("api/images/older/" . $image);
-                                $image_data = file_get_contents("api/images/older/" . $image);
-                                $image_data_base64 = base64_encode($image_data);
-
-                                // Mostra as imagens em forma de tabela
-                                echo '<div class="col-3">
-                                            <img src="data:' . $image_type . ';base64,' . $image_data_base64 . '" alt="" class="img-fluid">
-                                            <span>' . date("d/m/Y H:i:s", $image_time) . '</span>
-                                        </div>';
-                            }
-                        }
-                        ?>
+                    <div class="row mt-4" id="historico-imagens">
+                        <!-- Aqui é colocado o historico de imagens -->
                     </div>
                 <?php
                 }
@@ -174,61 +137,114 @@ if (in_array($_GET['nome'], $files)) {
             sidebar.classList.toggle('active');
         });
 
-        const getLogs = async () => {
-            const response = await fetch("/api/api.php?nome=<?php echo $_GET['nome']; ?>&tipo=log");
-            // check if the response is ok
-            if (response.ok) {
-                const textValue = await response.text();
-                console.log(textValue);
+        <?php
+        if ($_GET['nome'] == "webcam") {
+        ?>
+            // Obtem a lista de imagens do historico
+            const getOlderImages = async () => {
+                const response = await fetch('/api/api.php?nome=oldercam');
+                // check if the response is ok
+                if (response.ok) {
+                    const textValue = await response.text();
 
-                let lines = textValue.trim().split("\r\n");
+                    // Separa o nome das imagens em strings diferentes
+                    let images = textValue.trim().split("\r\n").sort();
 
-                let xValues = new Array(),
-                    yValues = new Array();
+                    let historico = document.getElementById("historico-imagens");
+                    images.forEach(img => {
+                        // Obtem a hora da imagem com base no timestamp presente no nome
+                        let date = new Date(parseInt(img.split('_')[1]) * 1000);
+                        let hora = date.toLocaleString();
 
-                lines.forEach(line => {
-                    let [date, value] = line.split(";");
-                    xValues.push(date);
+                        // Adiciona um novo elemento para colocar a imagem
+                        historico.innerHTML += `<div class="col-3""><img id="${img}" src="" alt="" class="img-fluid"><span>${hora}</span></div>`;
 
-                    if (value === "On") {
-                        yValues.push(1);
-                    } else if (value === "Off") {
-                        yValues.push(0);
-                    } else {
-                        yValues.push(value);
-                    }
-                });
-
-                // Show only the last 10 elements of the log
-                new Chart("chart", {
-                    type: "line",
-                    data: {
-                        labels: xValues.slice(-20),
-                        datasets: [{
-                            fill: true,
-                            lineTension: 0,
-                            backgroundColor: "rgba(173, 219, 255, 0.6)",
-                            borderColor: "rgba(0,0,255,0.1)",
-                            data: yValues.slice(-20)
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true,
-                        legend: {
-                            display: false
-                        },
-                        scales: {
-                            y: {
-                                suggestedMin: 0,
-                                suggestedMax: 100
-                            }
-                        }
-                    }
-                });
+                        // Obtem a imagem
+                        const image = document.getElementById(img);
+                        fetch("/api/api.php?nome=oldercam&img=" + img)
+                            .then((response) => response.blob())
+                            .then((blob) => {
+                                const objectURL = URL.createObjectURL(blob);
+                                document.getElementById(img).src = objectURL;
+                            });
+                    });
+                }
             }
+            getOlderImages().catch(error => console.error(error));
+        <?php
+        } else {
+        ?>
+            // Obtem e processa os dados dos logs dos sensore e atuadores
+            const getLogs = async () => {
+                const response = await fetch("/api/api.php?nome=<?php echo $_GET['nome']; ?>&tipo=log");
+                // check if the response is ok
+                if (response.ok) {
+                    const textValue = await response.text();
+
+                    // Se não houver nenhum log para mostar
+                    if (textValue !== "") {
+                        let lines = textValue.trim().split("\r\n");
+                        
+                        let xValues = new Array(),
+                        yValues = new Array();
+                        
+                        
+                        // Adiciona os logs á tabela e processa os dados para o grafico
+                        let historico = document.getElementById('historico-logs');
+                        lines.forEach(line => {
+                            let [date, value] = line.split(";");
+
+                            historico.innerHTML += `<tr><td>${date}</td><td>${value}</td></tr>`;
+
+                            xValues.push(date);
+
+                            // Converte os valores dos atuadores para 1 ou 0
+                            if (value === "On") {
+                                yValues.push(1);
+                            } else if (value === "Off") {
+                                yValues.push(0);
+                            } else {
+                                yValues.push(value);
+                            }
+                        });
+
+                        // Mostra apenas os ultimos 20 elementos dos logs
+                        new Chart("chart", {
+                            type: "line",
+                            data: {
+                                labels: xValues.slice(-20),
+                                datasets: [{
+                                    fill: true,
+                                    lineTension: 0,
+                                    backgroundColor: "rgba(173, 219, 255, 0.6)",
+                                    borderColor: "rgba(0,0,255,0.1)",
+                                    data: yValues.slice(-20)
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                legend: {
+                                    display: false
+                                },
+                                scales: {
+                                    y: {
+                                        suggestedMin: 0,
+                                        suggestedMax: 100
+                                    }
+                                }
+                            }
+                        });
+                    } else {    // Caso não exista nenhum log para mostrar
+                        let logsContainer = document.getElementById('logs-container');
+                        logsContainer.innerHTML = '<div class="card-header"><b>Sem logs para mostrar de momento.</b></div>';
+                    }
+                }
+            }
+            getLogs().catch(error => console.error(error));
+        <?php
         }
-        getLogs().catch(error => console.error(error));
+        ?>
     </script>
     <!-- Popper.JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

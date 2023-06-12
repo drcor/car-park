@@ -18,13 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $timestamp = time(); // Obter o timestamp atual
         $date = date('Y-m-d H:i:s', $timestamp);
 
+        // Guarda os dados nos ficheiros da API
         file_put_contents('files/' . $_POST['nome'] . '/valor.txt', $_POST['valor']);
         file_put_contents('files/' . $_POST['nome'] . '/hora.txt', $date);
         file_put_contents('files/' . $_POST['nome'] . '/log.txt', $date . ';' . $_POST['valor'] . "\r\n", FILE_APPEND);
 
+        // Retorna o nome e o tipo de sensor/atuador
         $nome = file_get_contents('files/' . $_POST['nome'] . '/nome.txt');
         $info = file_get_contents('files/' . $_POST['nome'] . '/info.txt');
-
         echo $_POST['nome'] . ';' . $nome . ';' . $info;
     } else {
         echo "Faltam parametros no POST";
@@ -78,10 +79,10 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if (isset($_GET['tipo']) and $_GET['tipo'] == "hora") {
                 echo date("Y/m/d H:i:s", filectime("images/webcam.jpg"));   // Devolve a data e hora da webcam
             } else {
+                // Envia a imagem solicitada
                 header('Content-Type: application/image');
                 header('Content-Disposition: attachment; filename="webcam.jpg"');
-                readfile('images/webcam.jpg');
-                //echo file_get_contents('images/webcam.jpg');                // Senao devolve a imagem da webcam
+                echo file_get_contents('images/webcam.jpg');                // Senao devolve a imagem da webcam
             }
         } else {
             http_response_code(404);
@@ -95,6 +96,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if (count($older_cam_list) > 0) {
             if (isset($_GET['img']) and in_array($_GET['img'], $older_cam_list)) {
+                // Envia a imagem solicitada
                 header('Content-Type: application/image');
                 header('Content-Disposition: attachment; filename="' . $_GET['img'] . '"');
                 echo file_get_contents("images/older/".$_GET['img']);

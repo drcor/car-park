@@ -95,6 +95,7 @@ if (in_array($_GET['nome'], $files)) {
             <div class="container pt-4">
                 <h2><?php echo $nome; ?></h2>
                 <?php
+                // Se for o historico de um sensor atuador
                 if ($_GET['nome'] != 'webcam') {
                 ?>
                     <div class="card mt-4 mb-4"  id="logs-container">
@@ -119,7 +120,7 @@ if (in_array($_GET['nome'], $files)) {
                         </div>
                     </div>
                 <?php
-                } else {
+                } else {    // Se for o historico da webcam
                 ?>
                     <div class="row mt-4" id="historico-imagens">
                         <!-- Aqui é colocado o historico de imagens -->
@@ -164,6 +165,7 @@ if (in_array($_GET['nome'], $files)) {
                         fetch("/api/api.php?nome=oldercam&img=" + img)
                             .then((response) => response.blob())
                             .then((blob) => {
+                                // Atualiza a imagem
                                 const objectURL = URL.createObjectURL(blob);
                                 document.getElementById(img).src = objectURL;
                             });

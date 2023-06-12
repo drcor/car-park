@@ -42,7 +42,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <!-- ficheiro css-->
-    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="/styles/login.css">
 </head>
 <body>
     <!-- Card Login -->
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <?php echo $auth_fail ? '<span class="bg-warning small p-1 rounded-2">Utilizador ou palavra passe incorretas!</span>' : ''; ?>
-            <!-- Butao submit-->
+            <!-- Botao submit-->
             <input class="btn btn-primary w-100" type="submit" value="ENTRAR">  
         </form>
     </div>

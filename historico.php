@@ -149,7 +149,7 @@ if (in_array($_GET['nome'], $files)) {
                     const textValue = await response.text();
 
                     // Separa o nome das imagens em strings diferentes
-                    let images = textValue.trim().split("\r\n").sort();
+                    let images = textValue.trim().split("\r\n").sort().reverse();
 
                     let historico = document.getElementById("historico-imagens");
                     images.forEach(img => {
